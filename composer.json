@@ -1,0 +1,44 @@
+{
+  "name": "inblank/yii2-showroom",
+  "type": "yii2-extension",
+  "description": "Yii2 module to manage goods and service",
+  "keywords": [
+    "yii2",
+    "module",
+    "goods",
+    "service"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/inblank/yii2-showroom",
+  "authors": [
+    {
+      "name": "Pavel Aleksandrov",
+      "email": "inblank@yandex.ru",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.4",
+    "ext-intl": "*",
+    "yiisoft/yii2": "2.0.*",
+    "creocoder/yii2-nested-sets": "0.9.*",
+    "inblank/yii2-transliter": "0.1.*",
+    "inblank/yii2-seobility": "0.1.*",
+    "inblank/yii2-taggable": "0.1.*",
+    "inblank/yii2-sortable": "0.1.*"
+  },
+  "require-dev": {
+    "codeception/codeception": "^2.1",
+    "codeception/specify": "~0.4",
+    "codeception/verify": "~0.3",
+    "yiisoft/yii2-codeception": "~2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "inblank\\showroom\\": ""
+    }
+  },
+  "extra": {
+    "bootstrap": "inblank\\showroom\\Bootstrap"
+  }
+}

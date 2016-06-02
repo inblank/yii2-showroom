@@ -1,0 +1,21 @@
+<?php
+
+use yii\helpers\Html;
+
+/* @var $this yii\web\View */
+/* @var $model inblank\showroom\models\Vendor */
+
+$this->title = Yii::t('showroom_general', 'Update') . ': '. $model->name;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('showroom_backend', 'Vendors'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = Yii::t('showroom_general', 'Update');
+?>
+<div class="vendor-update">
+
+    <h1><?= Html::encode($this->title) ?></h1>
+
+    <?= $this->render('_form', [
+        'model' => $model,
+    ]) ?>
+
+</div>

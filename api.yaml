@@ -1,0 +1,65 @@
+swagger: "2.0"
+info:
+    title: Goods and Service API
+    description: Manage goods and service pricelist API
+    version: "0.1.0"
+host: mods.pva
+schemes:
+    - http
+basePath: /api/v1
+produces:
+    - application/json
+paths:
+  /products:
+    get:
+      summary: Get products list
+      description: |
+        Getting list of all products in system
+      parameters:
+        - name: page
+          in: query
+          description: page number to get
+          required: false
+          type: number
+          format: int32
+      tags:
+        - Products
+      responses:
+        200:
+          description: An array of products
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Product:
+    type: object
+    properties:
+      id:
+        type: number
+        format: int32
+        description: Product ID
+      type:
+        type: number
+        format: int32
+        description: Product type
+      name:
+        type: string
+        description: Product name
+      slug:
+        type: string
+        description: Product slug
+  Error:
+      type: object
+      properties:
+        code:
+          type: number
+          format: int32
+        message:
+          type: string
+        fields:
+          type: string
