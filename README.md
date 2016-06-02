@@ -8,7 +8,7 @@
 
 > **[Русская версия](https://github.com/inblank/yii2-showroom/blob/master/README_RU.md)** этого документа доступна [здесь](https://github.com/inblank/yii2-showroom/blob/master/README_RU.md).
 
-Module `yii2-showroom` for Yii2 allows
+Module `yii2-showroom` for Yii2 allows to manage goods and services
 
 ## Installation
 

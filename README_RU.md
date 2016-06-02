@@ -8,7 +8,7 @@
 
 > The **[English version](https://github.com/inblank/yii2-showroom/blob/master/README.md)** of this document available [here](https://github.com/inblank/yii2-showroom/blob/master/README.md).
 
-Модуль `yii2-showroom` для [Yii2](http://www.yiiframework.com/) позволяет
+Модуль `yii2-showroom` для [Yii2](http://www.yiiframework.com/) позволяет управлять товарами и услугами
 
 ## Установка
 
