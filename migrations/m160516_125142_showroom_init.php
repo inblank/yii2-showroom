@@ -5,6 +5,8 @@ use yii\db\Schema;
 
 class m160516_125142_showroom_init extends Migration
 {
+    const TAB_SELLERS = 'sellers';
+    const TAB_SELLERS_PROFILES = 'sellers_profiles';
     const TAB_CATEGORIES = 'categories';
     const TAB_TREE = 'categories_tree';
     const TAB_TYPES = 'types';
@@ -15,6 +17,29 @@ class m160516_125142_showroom_init extends Migration
 
     public function up()
     {
+        // Sellers
+        $this->createTable($this->tn(self::TAB_SELLERS), [
+            'id' => Schema::TYPE_PK,
+            'user_id' => Schema::TYPE_INTEGER . ' NOT NULL',
+            'name' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
+            'slug' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
+            'created_at' => Schema::TYPE_DATETIME . ' DEFAULT NULL',
+        ], $this->tableOptions);
+        $this->createIndex('unique_slug', $this->tn(self::TAB_SELLERS), 'slug', true);
+
+        // Seller profiles
+        $this->createTable($this->tn(self::TAB_SELLERS_PROFILES), [
+            'seller_id' => Schema::TYPE_PK,
+            'web' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
+            'description' => Schema::TYPE_TEXT . " NOt NULL",
+        ], $this->tableOptions);
+        $this->addForeignKey(
+            $this->fk(self::TAB_SELLERS_PROFILES, self::TAB_SELLERS),
+            $this->tn(self::TAB_SELLERS_PROFILES), 'seller_id',
+            $this->tn(self::TAB_SELLERS), 'id',
+            'CASCADE', 'RESTRICT'
+        );
+
         // Products types
         $this->createTable($this->tn(self::TAB_TYPES), [
             'id' => Schema::TYPE_PK,
@@ -26,16 +51,22 @@ class m160516_125142_showroom_init extends Migration
         // Products
         $this->createTable($this->tn(self::TAB_PRODUCTS), [
             'id' => Schema::TYPE_PK,
+            'kind' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
             'seller_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
             'type_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
             'slug' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'name' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'created_at' => Schema::TYPE_DATETIME . ' DEFAULT NULL',
-            'deleted_at' => Schema::TYPE_DATETIME . ' DEFAULT NULL',
         ], $this->tableOptions);
         $this->createIndex('unique_slug', $this->tn(self::TAB_PRODUCTS), 'slug', true);
         $this->createIndex('seller', $this->tn(self::TAB_PRODUCTS), 'seller_id');
         $this->createIndex('type', $this->tn(self::TAB_PRODUCTS), 'type_id');
+        $this->addForeignKey(
+            $this->fk(self::TAB_PRODUCTS, self::TAB_SELLERS),
+            $this->tn(self::TAB_PRODUCTS), 'seller_id',
+            $this->tn(self::TAB_SELLERS), 'id',
+            'CASCADE', 'RESTRICT'
+        );
         $this->addForeignKey(
             $this->fk(self::TAB_PRODUCTS, self::TAB_TYPES),
             $this->tn(self::TAB_PRODUCTS), 'type_id',
@@ -49,7 +80,6 @@ class m160516_125142_showroom_init extends Migration
             'slug' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'name' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'created_at' => Schema::TYPE_DATETIME . ' DEFAULT NULL',
-            'deleted_at' => Schema::TYPE_DATETIME . ' DEFAULT NULL',
         ], $this->tableOptions);
         $this->createIndex('unique_slug', $this->tn(self::TAB_CATEGORIES), 'slug', true);
 
@@ -120,10 +150,12 @@ class m160516_125142_showroom_init extends Migration
             self::TAB_PRICES,
             self::TAB_VENDORS,
             self::TAB_LINKS,
-            self::TAB_TYPES,
             self::TAB_PRODUCTS,
+            self::TAB_TYPES,
             self::TAB_TREE,
             self::TAB_CATEGORIES,
+            self::TAB_SELLERS_PROFILES,
+            self::TAB_SELLERS,
         ];
         foreach ($tables as $table) {
             $this->dropTable($this->tn($table));
