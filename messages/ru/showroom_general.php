@@ -12,8 +12,10 @@ return [
 
     'Slug'=>'Алиас',
     'Name'=>'Название',
-    'Created at'=>'Создана',
-    'Deleted at'=> 'Удалена',
+    'Kind'=>'Вид',
+    'Created At'=>'Создание',
+    'Deleted At'=> 'Удаление',
+    'User ID'=>'ID пользователя',
     'Category ID'=>'ID категории',
     'Product ID'=>'ID продукта',
     'Sort'=>'Порядок',
@@ -27,7 +29,13 @@ return [
     'Available Count'=>'В наличии',
     'Type ID'=>'ID типа',
     'Status'=>'Статус',
+    'Description'=>'Описание',
+    'Web'=>'Сайт',
+
+    'Sellers'=>'Продавцы',
+    'Seller'=>'Продавец',
 
     'The requested {name} does not exist.' => 'Запрошенный {name} не существует',
     'Are you sure you want to delete this {name}?' => 'Вы уверены, что хотите удалить {name}',
+    'You must specify the User class in the models map of module'=>'Необходимо задать класс User в карте моделей модуля',
 ];
