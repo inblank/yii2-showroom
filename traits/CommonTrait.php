@@ -27,7 +27,7 @@ trait CommonTrait{
      */
     public static function di($name)
     {
-        $class = 'inblank\show\models\\' . $name;
+        $class = 'inblank\showroom\models\\' . $name;
         return empty(self::getModule()->modelMap[$name]) ? $class : self::getModule()->modelMap[$name];
     }
 
