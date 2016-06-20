@@ -9,6 +9,11 @@ trait CommonTrait{
 
     static protected $_module;
 
+    /**
+     * Get module
+     * @return \inblank\showroom\Module
+     * @throws InvalidConfigException
+     */
     static function getModule(){
         if(self::$_module===null){
             if(empty(Yii::$app->modules['showroom'])) {

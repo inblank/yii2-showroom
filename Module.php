@@ -24,6 +24,24 @@ class Module extends BaseModule
      * @See [[GroupUrlRule::prefix]]
      */
     public $urlPrefix = 'showroom';
+    /**
+     * Seller logo path relative to @webroot
+     * @var string
+     */
+    public $logoPath = '/images/sellers';
+    /**
+     * Default logo for seller
+     * @var string
+     */
+    public $defaultLogo = 'logo.svg';
+    /**
+     * Size of logo image.
+     * If array: [width, height].
+     * If integer: use value for with and height.
+     * If not set: image save as is.
+     * @var array|integer
+     */
+    public $logoSize;
 
     /** @var array The rules for frontend to be used in URL management. */
     public $urlRulesFrontend = [
