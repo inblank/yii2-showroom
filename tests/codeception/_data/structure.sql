@@ -4,10 +4,6 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
---
--- Structure
---
-
 -- --------------------------------------------------------
 
 --
@@ -19,8 +15,7 @@ CREATE TABLE `showroom_categories` (
     `id` int(11) NOT NULL,
     `slug` varchar(255) NOT NULL DEFAULT '',
     `name` varchar(255) NOT NULL DEFAULT '',
-    `created_at` datetime DEFAULT NULL,
-    `deleted_at` datetime DEFAULT NULL
+    `created_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -78,12 +73,41 @@ CREATE TABLE `showroom_prices` (
 DROP TABLE IF EXISTS `showroom_products`;
 CREATE TABLE `showroom_products` (
     `id` int(11) NOT NULL,
+    `kind` int(11) DEFAULT NULL,
     `seller_id` int(11) DEFAULT NULL,
     `type_id` int(11) DEFAULT NULL,
     `slug` varchar(255) NOT NULL DEFAULT '',
     `name` varchar(255) NOT NULL DEFAULT '',
-    `created_at` datetime DEFAULT NULL,
-    `deleted_at` datetime DEFAULT NULL
+    `created_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `showroom_sellers`
+--
+
+DROP TABLE IF EXISTS `showroom_sellers`;
+CREATE TABLE `showroom_sellers` (
+    `id` int(11) NOT NULL,
+    `user_id` int(11) DEFAULT NULL,
+    `logo` varchar(255) DEFAULT NULL,
+    `name` varchar(255) NOT NULL DEFAULT '',
+    `slug` varchar(255) NOT NULL DEFAULT '',
+    `created_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `showroom_sellers_profiles`
+--
+
+DROP TABLE IF EXISTS `showroom_sellers_profiles`;
+CREATE TABLE `showroom_sellers_profiles` (
+    `seller_id` int(11) NOT NULL,
+    `web` varchar(255) NOT NULL DEFAULT '',
+    `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -109,6 +133,18 @@ DROP TABLE IF EXISTS `showroom_vendors`;
 CREATE TABLE `showroom_vendors` (
     `id` int(11) NOT NULL,
     `slug` varchar(255) NOT NULL DEFAULT '',
+    `name` varchar(255) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+    `id` int(11) NOT NULL,
     `name` varchar(255) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -157,6 +193,19 @@ ALTER TABLE `showroom_products`
     ADD KEY `type` (`type_id`);
 
 --
+-- Indexes for table `showroom_sellers`
+--
+ALTER TABLE `showroom_sellers`
+    ADD PRIMARY KEY (`id`),
+    ADD UNIQUE KEY `unique_slug` (`slug`);
+
+--
+-- Indexes for table `showroom_sellers_profiles`
+--
+ALTER TABLE `showroom_sellers_profiles`
+    ADD PRIMARY KEY (`seller_id`);
+
+--
 -- Indexes for table `showroom_types`
 --
 ALTER TABLE `showroom_types`
@@ -190,6 +239,16 @@ ALTER TABLE `showroom_categories_tree`
 ALTER TABLE `showroom_products`
     MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `showroom_sellers`
+--
+ALTER TABLE `showroom_sellers`
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `showroom_sellers_profiles`
+--
+ALTER TABLE `showroom_sellers_profiles`
+    MODIFY `seller_id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `showroom_types`
 --
 ALTER TABLE `showroom_types`
@@ -207,56 +266,26 @@ ALTER TABLE `showroom_vendors`
 -- Constraints for table `showroom_categories_products`
 --
 ALTER TABLE `showroom_categories_products`
-    ADD CONSTRAINT `fk__showroom_categories_products__categories` FOREIGN KEY (`category_id`) REFERENCES `showroom_categories` (`id`) ON DELETE CASCADE,
-    ADD CONSTRAINT `fk__showroom_categories_products__products` FOREIGN KEY (`product_id`) REFERENCES `showroom_products` (`id`) ON DELETE CASCADE;
+    ADD CONSTRAINT `fk__showroom_categories_products__showroom_categories` FOREIGN KEY (`category_id`) REFERENCES `showroom_categories` (`id`) ON DELETE CASCADE,
+    ADD CONSTRAINT `fk__showroom_categories_products__showroom_products` FOREIGN KEY (`product_id`) REFERENCES `showroom_products` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `showroom_categories_tree`
 --
 ALTER TABLE `showroom_categories_tree`
-    ADD CONSTRAINT `fk__showroom_categories__categories_tree` FOREIGN KEY (`category_id`) REFERENCES `showroom_categories` (`id`);
+    ADD CONSTRAINT `fk__showroom_categories__showroom_categories_tree` FOREIGN KEY (`category_id`) REFERENCES `showroom_categories` (`id`);
 
 --
 -- Constraints for table `showroom_products`
 --
 ALTER TABLE `showroom_products`
-    ADD CONSTRAINT `fk__showroom_products__types` FOREIGN KEY (`type_id`) REFERENCES `showroom_types` (`id`);
-
+    ADD CONSTRAINT `fk__showroom_products__showroom_sellers` FOREIGN KEY (`seller_id`) REFERENCES `showroom_sellers` (`id`) ON DELETE CASCADE,
+    ADD CONSTRAINT `fk__showroom_products__showroom_types` FOREIGN KEY (`type_id`) REFERENCES `showroom_types` (`id`);
 
 --
--- Data
+-- Constraints for table `showroom_sellers_profiles`
 --
-INSERT INTO `showroom_types` (`id`, `slug`, `name`) VALUES
-    (1, 'test-1', 'Type 1'),
-    (2, 'test-2', 'Type 2'),
-    (3, 'test-3', 'Type 3');
-
-INSERT INTO `showroom_products` (`id`, `seller_id`, `type_id`, `slug`, `name`, `created_at`, `deleted_at`) VALUES
-    (1, NULL, 2, 'product-1', 'Product 1', '2016-06-02 04:34:20', NULL),
-    (2, NULL, NULL, 'product-2', 'Product 2', '2016-06-02 04:34:21', NULL),
-    (3, 1, NULL, 'product-3', 'Product 3', '2016-06-02 04:34:22', NULL),
-    (4, 1, 1, 'product-4', 'Product 4', '2016-06-02 04:34:23', NULL);
-
-INSERT INTO `showroom_vendors` (`id`, `slug`, `name`) VALUES
-    (1, 'vendor-1', 'Vendor 1'),
-    (2, 'vendor-2', 'Vendor 2');
-
-INSERT INTO `showroom_prices` (`seller_id`, `product_id`, `vendor_id`, `price`, `available_count`) VALUES
-    (1, 1, 0, 123, 10),
-    (1, 1, 1, 130, 10),
-    (1, 3, 0, 200, 10),
-    (1, 4, 0, 250, 10);
-
-INSERT INTO `showroom_categories` (`id`, `slug`, `name`, `created_at`, `deleted_at`) VALUES
-    (1, 'category-1', 'Category 1', '2016-06-02 07:01:39', NULL),
-    (2, 'category-2', 'Category 2', '2016-06-02 07:01:39', NULL),
-    (3, 'category-3', 'Category 3', '2016-06-02 07:01:39', NULL);
-
-# 558769
-INSERT INTO `showroom_categories_products` (`category_id`, `product_id`, `sort`) VALUES
-    (1, 2, 0),
-    (1, 3, 1),
-    (2, 4, 0);
-
+ALTER TABLE `showroom_sellers_profiles`
+    ADD CONSTRAINT `fk__showroom_sellers_profiles__showroom_sellers` FOREIGN KEY (`seller_id`) REFERENCES `showroom_sellers` (`id`) ON DELETE CASCADE;
 SET FOREIGN_KEY_CHECKS=1;
 COMMIT;

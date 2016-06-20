@@ -17,6 +17,11 @@ return [
         ],
     ],
     'modules'=>[
-        'showroom'=>'inblank\showroom\Module',
+        'showroom'=>[
+            'class'=>'inblank\showroom\Module',
+            'modelMap' => [
+                'User' => 'app\models\User',
+            ],
+        ],
     ],
 ];
