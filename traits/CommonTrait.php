@@ -19,4 +19,16 @@ trait CommonTrait{
         return self::$_module;
     }
 
+    /**
+     * Models dependency injection resolver
+     * @param string $name class name for resolve
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public static function di($name)
+    {
+        $class = 'inblank\show\models\\' . $name;
+        return empty(self::getModule()->modelMap[$name]) ? $class : self::getModule()->modelMap[$name];
+    }
+
 }

@@ -57,7 +57,16 @@ class Migration extends \yii\db\Migration
      */
     protected function fk($table1, $table2)
     {
-        return 'fk__' . $this->tableGroup . $table1 . '__' . $table2;
+        return 'fk__' . Yii::$app->db->tablePrefix . $this->tableGroup . $table1 . '__' . Yii::$app->db->tablePrefix . $this->tableGroup . $table2;
     }
 
+    /**
+     * Primary key names generator
+     * @param string $table table name
+     * @return string
+     */
+    protected function pk($table)
+    {
+        return 'pk__' . Yii::$app->db->tablePrefix . $this->tableGroup . $table;
+    }
 }

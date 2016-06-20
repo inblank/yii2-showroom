@@ -18,38 +18,43 @@ class m160516_125142_showroom_init extends Migration
     public function up()
     {
         // Sellers
-        $this->createTable($this->tn(self::TAB_SELLERS), [
+        $tab = $this->tn(self::TAB_SELLERS);
+        $this->createTable($tab, [
             'id' => Schema::TYPE_PK,
-            'user_id' => Schema::TYPE_INTEGER . ' NOT NULL',
+            'user_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
+            'logo' => Schema::TYPE_STRING . '(255) DEFAULT NULL',
             'name' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'slug' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'created_at' => Schema::TYPE_DATETIME . ' DEFAULT NULL',
         ], $this->tableOptions);
-        $this->createIndex('unique_slug', $this->tn(self::TAB_SELLERS), 'slug', true);
+        $this->createIndex('unique_slug', $tab, 'slug', true);
 
         // Seller profiles
-        $this->createTable($this->tn(self::TAB_SELLERS_PROFILES), [
+        $tab = $this->tn(self::TAB_SELLERS_PROFILES);
+        $this->createTable($tab, [
             'seller_id' => Schema::TYPE_PK,
             'web' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
-            'description' => Schema::TYPE_TEXT . " NOt NULL",
+            'description' => Schema::TYPE_TEXT . " NOT NULL",
         ], $this->tableOptions);
         $this->addForeignKey(
             $this->fk(self::TAB_SELLERS_PROFILES, self::TAB_SELLERS),
-            $this->tn(self::TAB_SELLERS_PROFILES), 'seller_id',
+            $tab, 'seller_id',
             $this->tn(self::TAB_SELLERS), 'id',
             'CASCADE', 'RESTRICT'
         );
 
         // Products types
-        $this->createTable($this->tn(self::TAB_TYPES), [
+        $tab = $this->tn(self::TAB_TYPES);
+        $this->createTable($tab, [
             'id' => Schema::TYPE_PK,
             'slug' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'name' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
         ], $this->tableOptions);
-        $this->createIndex('unique_slug', $this->tn(self::TAB_TYPES), 'slug', true);
+        $this->createIndex('unique_slug', $tab, 'slug', true);
 
         // Products
-        $this->createTable($this->tn(self::TAB_PRODUCTS), [
+        $tab = $this->tn(self::TAB_PRODUCTS);
+        $this->createTable($tab, [
             'id' => Schema::TYPE_PK,
             'kind' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
             'seller_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
@@ -58,33 +63,35 @@ class m160516_125142_showroom_init extends Migration
             'name' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'created_at' => Schema::TYPE_DATETIME . ' DEFAULT NULL',
         ], $this->tableOptions);
-        $this->createIndex('unique_slug', $this->tn(self::TAB_PRODUCTS), 'slug', true);
-        $this->createIndex('seller', $this->tn(self::TAB_PRODUCTS), 'seller_id');
-        $this->createIndex('type', $this->tn(self::TAB_PRODUCTS), 'type_id');
+        $this->createIndex('unique_slug', $tab, 'slug', true);
+        $this->createIndex('seller', $tab, 'seller_id');
+        $this->createIndex('type', $tab, 'type_id');
         $this->addForeignKey(
             $this->fk(self::TAB_PRODUCTS, self::TAB_SELLERS),
-            $this->tn(self::TAB_PRODUCTS), 'seller_id',
+            $tab, 'seller_id',
             $this->tn(self::TAB_SELLERS), 'id',
             'CASCADE', 'RESTRICT'
         );
         $this->addForeignKey(
             $this->fk(self::TAB_PRODUCTS, self::TAB_TYPES),
-            $this->tn(self::TAB_PRODUCTS), 'type_id',
+            $tab, 'type_id',
             $this->tn(self::TAB_TYPES), 'id',
             'RESTRICT', 'RESTRICT'
         );
 
         // Product categories table
-        $this->createTable($this->tn(self::TAB_CATEGORIES), [
+        $tab = $this->tn(self::TAB_CATEGORIES);
+        $this->createTable($tab, [
             'id' => Schema::TYPE_PK,
             'slug' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'name' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'created_at' => Schema::TYPE_DATETIME . ' DEFAULT NULL',
         ], $this->tableOptions);
-        $this->createIndex('unique_slug', $this->tn(self::TAB_CATEGORIES), 'slug', true);
+        $this->createIndex('unique_slug', $tab, 'slug', true);
 
         // Categories tree
-        $this->createTable($this->tn(self::TAB_TREE), [
+        $tab = $this->tn(self::TAB_TREE);
+        $this->createTable($tab, [
             'id' => Schema::TYPE_PK,
             'lft' => Schema::TYPE_INTEGER . ' NOT NULL',
             'rgt' => Schema::TYPE_INTEGER . ' NOT NULL',
@@ -92,56 +99,59 @@ class m160516_125142_showroom_init extends Migration
             'tree' => Schema::TYPE_INTEGER . ' NOT NULL',
             'category_id' => Schema::TYPE_INTEGER . " NOT NULL",
         ], $this->tableOptions);
-        $this->createIndex('category', $this->tn(self::TAB_TREE), 'category_id');
+        $this->createIndex('category', $tab, 'category_id');
         $this->addForeignKey(
             $this->fk(self::TAB_CATEGORIES, self::TAB_TREE),
-            $this->tn(self::TAB_TREE), 'category_id',
+            $tab, 'category_id',
             $this->tn(self::TAB_CATEGORIES), 'id',
             'RESTRICT', 'RESTRICT'
         );
 
         // Category and products links
-        $this->createTable($this->tn(self::TAB_LINKS), [
+        $tab = $this->tn(self::TAB_LINKS);
+        $this->createTable($tab, [
             'category_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'product_id' => Schema::TYPE_INTEGER . ' NOT NULL',
             'sort' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
         ], $this->tableOptions);
-        $this->addPrimaryKey('', $this->tn(self::TAB_LINKS), ['category_id', 'product_id']);
-        $this->createIndex('product', $this->tn(self::TAB_LINKS), ['product_id']);
-        $this->createIndex('sort', $this->tn(self::TAB_LINKS), ['category_id', 'sort']);
+        $this->addPrimaryKey($this->pk(self::TAB_LINKS), $tab, ['category_id', 'product_id']);
+        $this->createIndex('product', $tab, ['product_id']);
+        $this->createIndex('sort', $tab, ['category_id', 'sort']);
         $this->addForeignKey(
             $this->fk(self::TAB_LINKS, self::TAB_CATEGORIES),
-            $this->tn(self::TAB_LINKS), 'category_id',
+            $tab, 'category_id',
             $this->tn(self::TAB_CATEGORIES), 'id',
             'CASCADE', 'RESTRICT'
         );
         $this->addForeignKey(
             $this->fk(self::TAB_LINKS, self::TAB_PRODUCTS),
-            $this->tn(self::TAB_LINKS), 'product_id',
+            $tab, 'product_id',
             $this->tn(self::TAB_PRODUCTS), 'id',
             'CASCADE', 'RESTRICT'
         );
 
         // Vendors
-        $this->createTable($this->tn(self::TAB_VENDORS), [
+        $tab = $this->tn(self::TAB_VENDORS);
+        $this->createTable($tab, [
             'id' => Schema::TYPE_PK,
             'slug' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'name' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
         ], $this->tableOptions);
-        $this->createIndex('unique_slug', $this->tn(self::TAB_VENDORS), 'slug', true);
+        $this->createIndex('unique_slug', $tab, 'slug', true);
 
         // Current products price
-        $this->createTable($this->tn(self::TAB_PRICES), [
+        $tab = $this->tn(self::TAB_PRICES);
+        $this->createTable($tab, [
             'seller_id' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
             'product_id' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
             'vendor_id' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
             'price' => Schema::TYPE_FLOAT . ' NOT NULL DEFAULT 0',
             'available_count' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
         ], $this->tableOptions . ' PARTITION BY KEY([[seller_id]]) PARTITIONS 10');
-        $this->addPrimaryKey('', $this->tn(self::TAB_PRICES), ['seller_id', 'product_id', 'vendor_id']);
-        $this->createIndex('seller', $this->tn(self::TAB_PRICES), 'seller_id');
-        $this->createIndex('vendor', $this->tn(self::TAB_PRICES), 'vendor_id');
-        $this->createIndex('products', $this->tn(self::TAB_PRICES), 'product_id');
+        $this->addPrimaryKey($this->pk(self::TAB_PRICES), $tab, ['seller_id', 'product_id', 'vendor_id']);
+        $this->createIndex('seller', $tab, 'seller_id');
+        $this->createIndex('vendor', $tab, 'vendor_id');
+        $this->createIndex('products', $tab, 'product_id');
     }
 
     public function down()
