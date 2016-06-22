@@ -141,7 +141,7 @@ class Seller extends ActiveRecord
                 'class' => ImageBehavior::className(),
                 'imageAttribute' => 'logo',
                 'imageDefault' => 'logo.svg',
-                'imageSize' => 150,
+                'imageSize' => self::getModule()->logoSize,
             ]
         ];
     }
