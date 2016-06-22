@@ -8,7 +8,7 @@
  */
 namespace inblank\showroom\models;
 
-use Imagine\Image\Box;
+use inblank\image\ImageBehavior;
 use inblank\showroom\traits\CommonTrait;
 use yii;
 use yii\behaviors\SluggableBehavior;
@@ -29,7 +29,8 @@ use yii\db\Expression;
  *
  * Relations:
  * @property ActiveRecord $user user linked to seller
- * @property Product[] $Products list of seller products
+ * @property Product[] $products list of seller products
+ * @property SellerAddress[] $addresses list of seller addresses
  * @property SellerProfile $profile seller profile
  */
 class Seller extends ActiveRecord
@@ -61,9 +62,8 @@ class Seller extends ActiveRecord
             [['created_at'], 'date',
                 'format' => 'php:Y-m-d H:i:s'
             ],
-            [['name', 'slug', 'logo'], 'string', 'max' => 255],
+            [['name', 'slug'], 'string', 'max' => 255],
             [['slug'], 'unique'],
-            ['logo', 'default', 'value' => $this->getModule()->defaultLogo],
         ];
     }
 
@@ -80,6 +80,15 @@ class Seller extends ActiveRecord
             'slug' => Yii::t('showroom_general', 'Slug'),
             'created_at' => Yii::t('showroom_general', 'Created'),
         ];
+    }
+
+    /**
+     * Get list of sellers addresses
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAddresses()
+    {
+        return $this->hasMany($this->di('SellerAddress'), ['seller_id' => 'id']);
     }
 
     /**
@@ -128,6 +137,12 @@ class Seller extends ActiveRecord
                 'updatedAtAttribute' => false,
                 'value' => new Expression('NOW()'),
             ],
+            [
+                'class' => ImageBehavior::className(),
+                'imageAttribute' => 'logo',
+                'imageDefault' => 'logo.svg',
+                'imageSize' => 150,
+            ]
         ];
     }
 
@@ -156,77 +171,4 @@ class Seller extends ActiveRecord
         Yii::createObject($this->di('SellerProfile'))->deleteAll(['seller_id' => $this->id]);
     }
 
-    /**
-     * Get logo images absolute path in filesystem.
-     * If path not exist, try to create him
-     * @return string
-     * @throws yii\base\Exception
-     * @throws yii\base\InvalidConfigException
-     */
-    public static function getLogoPath()
-    {
-        static $path;
-        if ($path === null) {
-            $path = Yii::getAlias('@webroot') . '/' . (defined('IS_BACKEND') ? '../' : '') . trim(self::getModule()->logoPath, '/');
-            if (!file_exists($path)) {
-                yii\helpers\FileHelper::createDirectory($path);
-            }
-        }
-        return $path;
-    }
-
-    /**
-     * Remove seller's current logo image
-     * @throws yii\base\InvalidConfigException
-     */
-    protected function removeCurrentLogoImage()
-    {
-        if (!empty($this->logo) && $this->logo != $this->getModule()->defaultLogo) {
-            // remove old logo
-            @unlink(self::getLogoPath() . '/' . $this->logo);
-        }
-    }
-
-    /**
-     * Change seller logo
-     * @param $sourceFile
-     * @return bool if logo changed true
-     */
-    public function changeLogo($sourceFile)
-    {
-        if (!file_exists($sourceFile)) {
-            return false;
-        }
-        $logoPath = self::getLogoPath();
-        $fileName = md5($this->id . microtime(true) . rand()) . '.' . pathinfo($sourceFile)['extension'];
-        $destinationFile = $logoPath . '/' . $fileName;
-        if (!copy($sourceFile, $destinationFile)) {
-            return false;
-        }
-        $this->removeCurrentLogoImage();
-        $size = $this->getModule()->logoSize;
-        if (!empty($size)) {
-            if (!is_array($size)) {
-                $size = [$size, $size];
-            }
-            yii\imagine\Image::getImagine()
-                ->open($destinationFile)
-                ->resize(new Box($size[0], $size[1]))
-                ->save($destinationFile);
-        }
-        $this->logo = $fileName;
-        $this->updateAttributes(['logo']);
-        return true;
-    }
-
-    /**
-     * Reset seller's logo to default
-     * @throws yii\base\InvalidConfigException
-     */
-    public function resetLogo()
-    {
-        $this->removeCurrentLogoImage();
-        $this->logo = $this->getModule()->defaultLogo;
-        $this->updateAttributes(['logo']);
-    }
 }

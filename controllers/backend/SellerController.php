@@ -2,18 +2,18 @@
 
 namespace inblank\showroom\controllers\backend;
 
+use inblank\showroom\components\BackendController;
 use Yii;
 use inblank\showroom\models\Seller;
 use inblank\showroom\models\SellerSearch;
 use yii\helpers\ArrayHelper;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * SellerController implements the CRUD actions for Seller model.
  */
-class SellerController extends Controller
+class SellerController extends BackendController
 {
     /**
      * @inheritdoc
@@ -64,7 +64,8 @@ class SellerController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Seller();
+        /** @var Seller $model */
+        $model = Yii::createObject($this->di('Seller'));
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

@@ -33,8 +33,19 @@ return [
     'Description'=>'Описание',
     'Web'=>'Сайт',
 
+    'Title' => 'Заголовок',
+    'Lat' => 'Широта (lat)',
+    'Lng' => 'Долгота (lng)',
+    'Emails' => 'Адреса email',
+    'Phones' => 'Телефоны',
+    'Persons' => 'Персонал',
+    'Schedule' => 'Режим работы',
+
     'Sellers'=>'Продавцы',
     'Seller'=>'Продавец',
+
+    'Addresses' => 'Адреса',
+    'Address' => 'Адрес',
 
     'The requested {name} does not exist.' => 'Запрошенный {name} не существует',
     'Are you sure you want to delete this {name}?' => 'Вы уверены, что хотите удалить {name}',

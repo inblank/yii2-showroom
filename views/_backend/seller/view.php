@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('showroom_backend', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('showroom_general', 'Addresses') . ' ('.$model->getAddresses()->count().')', ['/showroom/seller-address/list', 'seller_id' => $model->id], ['class'=>'btn btn-info'] )?>
         <?= Html::a(Yii::t('showroom_backend', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -25,6 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
+    <div class="logo">
+        <?= Html::img($model->imageUrl, ['width'=>150, 'height'=>150])?>
+    </div>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [

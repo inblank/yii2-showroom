@@ -7,6 +7,7 @@ class m160516_125142_showroom_init extends Migration
 {
     const TAB_SELLERS = 'sellers';
     const TAB_SELLERS_PROFILES = 'sellers_profiles';
+    const TAB_SELLERS_ADDRESSES = 'sellers_addresses';
     const TAB_CATEGORIES = 'categories';
     const TAB_TREE = 'categories_tree';
     const TAB_TYPES = 'types';
@@ -38,6 +39,29 @@ class m160516_125142_showroom_init extends Migration
         ], $this->tableOptions);
         $this->addForeignKey(
             $this->fk(self::TAB_SELLERS_PROFILES, self::TAB_SELLERS),
+            $tab, 'seller_id',
+            $this->tn(self::TAB_SELLERS), 'id',
+            'CASCADE', 'RESTRICT'
+        );
+
+        // Seller addresses
+        $tab = $this->tn(self::TAB_SELLERS_ADDRESSES);
+        $this->createTable($tab, [
+            'id' => Schema::TYPE_PK,
+            'seller_id' => Schema::TYPE_INTEGER . ' NOT NULL',
+            'sort' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 0',
+            'title' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
+            'lat' => Schema::TYPE_FLOAT . ' NOT NULL DEFAULT 0',
+            'lng' => Schema::TYPE_FLOAT . ' NOT NULL DEFAULT 0',
+            'address' => Schema::TYPE_TEXT . " NOT NULL",
+            'emails' => Schema::TYPE_TEXT . " NOT NULL",
+            'phones' => Schema::TYPE_TEXT . " NOT NULL",
+            'persons' => Schema::TYPE_TEXT . " NOT NULL",
+            'schedule' => Schema::TYPE_TEXT . " NOT NULL",
+            'description' => Schema::TYPE_TEXT . ' NOT NULL'
+        ], $this->tableOptions);
+        $this->addForeignKey(
+            $this->fk(self::TAB_SELLERS_ADDRESSES, self::TAB_SELLERS),
             $tab, 'seller_id',
             $this->tn(self::TAB_SELLERS), 'id',
             'CASCADE', 'RESTRICT'
@@ -164,6 +188,7 @@ class m160516_125142_showroom_init extends Migration
             self::TAB_TYPES,
             self::TAB_TREE,
             self::TAB_CATEGORIES,
+            self::TAB_SELLERS_ADDRESSES,
             self::TAB_SELLERS_PROFILES,
             self::TAB_SELLERS,
         ];

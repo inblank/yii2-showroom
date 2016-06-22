@@ -22,12 +22,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            //['class' => 'yii\grid\SerialColumn'],
-
-            //'id',
             [
-                'attribute'=>'user.name',
-                'label'=>Yii::t('showroom_backend', 'User'),
+                'attribute'=>'id',
+                'headerOptions'=>[
+                    'width'=>'1%'
+                ],
+            ],
+            [
+                'attribute' => 'logo',
+                'format' => 'html',
+                'value' => function($model){
+                    return Html::img($model->imageUrl, ['width'=>40, 'height'=>40]);
+                }
             ],
             'name',
             'slug',

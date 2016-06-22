@@ -17,6 +17,8 @@
       "role": "Developer"
     }
   ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "php": ">=5.4",
     "ext-intl": "*",
@@ -35,7 +37,9 @@
     "inblank/yii2-transliter": "0.1.*",
     "inblank/yii2-seobility": "0.1.*",
     "inblank/yii2-taggable": "0.1.*",
-    "inblank/yii2-sortable": "0.1.*"
+    "inblank/yii2-sortable": "0.1.*",
+    "inblank/yii2-image": "dev-master",
+    "inblank/yii2-jsonfields": "dev-master"
   },
   "require-dev": {
     "codeception/codeception": "^2.1",
