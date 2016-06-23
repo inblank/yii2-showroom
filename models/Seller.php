@@ -32,6 +32,9 @@ use yii\db\Expression;
  * @property Product[] $products list of seller products
  * @property SellerAddress[] $addresses list of seller addresses
  * @property SellerProfile $profile seller profile
+ *
+ * Methods:
+ * @method bool imageChange($filename)
  */
 class Seller extends ActiveRecord
 {

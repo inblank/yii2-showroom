@@ -48,6 +48,9 @@ class SellerAddressSearch extends SellerAddress
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=>[
+                'defaultOrder' => ['sort' => SORT_ASC],
+            ],
         ]);
 
         $this->load($params);
@@ -62,9 +65,6 @@ class SellerAddressSearch extends SellerAddress
         $query->andFilterWhere([
             'id' => $this->id,
             'seller_id' => $this->seller_id,
-            'sort' => $this->sort,
-            'lat' => $this->lat,
-            'lng' => $this->lng,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])

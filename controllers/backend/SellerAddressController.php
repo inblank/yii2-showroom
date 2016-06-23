@@ -42,7 +42,9 @@ class SellerAddressController extends BackendController
 
         $searchModel = new SellerAddressSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $dataProvider->query->andFilterWhere([
+            'seller_id' => $seller_id,
+        ]);
         return $this->render('list', [
             'seller' => $seller,
             'searchModel' => $searchModel,
