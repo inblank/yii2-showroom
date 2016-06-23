@@ -17,13 +17,23 @@ class Bootstrap implements yii\base\BootstrapInterface{
     /**
      * Bootstrap method to be called during application bootstrap stage.
      * @param Application $app the application currently running
+     * @throws yii\base\InvalidConfigException
      */
     public function bootstrap($app)
     {
+        if (!isset($app->get('i18n')->translations['showroom*'])) {
+            $app->get('i18n')->translations['showroom*'] = [
+                'class'    => PhpMessageSource::className(),
+                'basePath' => __DIR__ . '/messages',
+            ];
+        }
         /** @var Module $module */
         /** @var \yii\db\ActiveRecord $modelName */
         if ($app->hasModule('showroom') && ($module = $app->getModule('showroom')) instanceof Module) {
             $this->_modelMap = array_merge($this->_modelMap, $module->modelMap);
+            if(!array_key_exists('User', $this->_modelMap)){
+                throw new yii\base\InvalidConfigException(Yii::t('showroom_general', 'You must specify the User class in the models map of module'));
+            }
             foreach ($this->_modelMap as $name => $definition) {
                 $class = "inblank\\showroom\\models\\" . $name;
                 Yii::$container->set($class, $definition);
@@ -55,12 +65,6 @@ class Bootstrap implements yii\base\BootstrapInterface{
                     $configUrlRule['rules'] = $module->urlRulesFrontend;
                     $module->frontendUrlManager->addRules([new GroupUrlRule($configUrlRule)], false);
                 }
-            }
-            if (!isset($app->get('i18n')->translations['showroom*'])) {
-                $app->get('i18n')->translations['showroom*'] = [
-                    'class'    => PhpMessageSource::className(),
-                    'basePath' => __DIR__ . '/messages',
-                ];
             }
         }
     }
