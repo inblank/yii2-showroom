@@ -73,9 +73,9 @@ CREATE TABLE `showroom_prices` (
 DROP TABLE IF EXISTS `showroom_products`;
 CREATE TABLE `showroom_products` (
     `id` int(11) NOT NULL,
-    `kind` int(11) DEFAULT NULL,
+    `type` int(11) DEFAULT NULL,
     `seller_id` int(11) DEFAULT NULL,
-    `type_id` int(11) DEFAULT NULL,
+    `group_id` int(11) DEFAULT NULL,
     `slug` varchar(255) NOT NULL DEFAULT '',
     `name` varchar(255) NOT NULL DEFAULT '',
     `created_at` datetime DEFAULT NULL
@@ -113,11 +113,11 @@ CREATE TABLE `showroom_sellers_profiles` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `showroom_types`
+-- Table structure for table `showroom_groups`
 --
 
-DROP TABLE IF EXISTS `showroom_types`;
-CREATE TABLE `showroom_types` (
+DROP TABLE IF EXISTS `showroom_groups`;
+CREATE TABLE `showroom_groups` (
     `id` int(11) NOT NULL,
     `slug` varchar(255) NOT NULL DEFAULT '',
     `name` varchar(255) NOT NULL DEFAULT ''
@@ -190,7 +190,7 @@ ALTER TABLE `showroom_products`
     ADD PRIMARY KEY (`id`),
     ADD UNIQUE KEY `unique_slug` (`slug`),
     ADD KEY `seller` (`seller_id`),
-    ADD KEY `type` (`type_id`);
+    ADD KEY `group` (`group_id`);
 
 --
 -- Indexes for table `showroom_sellers`
@@ -206,9 +206,9 @@ ALTER TABLE `showroom_sellers_profiles`
     ADD PRIMARY KEY (`seller_id`);
 
 --
--- Indexes for table `showroom_types`
+-- Indexes for table `showroom_groups`
 --
-ALTER TABLE `showroom_types`
+ALTER TABLE `showroom_groups`
     ADD PRIMARY KEY (`id`),
     ADD UNIQUE KEY `unique_slug` (`slug`);
 
@@ -249,9 +249,9 @@ ALTER TABLE `showroom_sellers`
 ALTER TABLE `showroom_sellers_profiles`
     MODIFY `seller_id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `showroom_types`
+-- AUTO_INCREMENT for table `showroom_groups`
 --
-ALTER TABLE `showroom_types`
+ALTER TABLE `showroom_groups`
     MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `showroom_vendors`
@@ -280,7 +280,7 @@ ALTER TABLE `showroom_categories_tree`
 --
 ALTER TABLE `showroom_products`
     ADD CONSTRAINT `fk__showroom_products__showroom_sellers` FOREIGN KEY (`seller_id`) REFERENCES `showroom_sellers` (`id`) ON DELETE CASCADE,
-    ADD CONSTRAINT `fk__showroom_products__showroom_types` FOREIGN KEY (`type_id`) REFERENCES `showroom_types` (`id`);
+    ADD CONSTRAINT `fk__showroom_products__showroom_groups` FOREIGN KEY (`group_id`) REFERENCES `showroom_groups` (`id`);
 
 --
 -- Constraints for table `showroom_sellers_profiles`

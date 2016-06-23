@@ -3,16 +3,16 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model inblank\showroom\models\Type */
+/* @var $model inblank\showroom\models\Group */
 
 $this->title = Yii::t('showroom_general', 'Update {modelClass}: ', [
-    'modelClass' => 'Type',
+    'modelClass' => 'Group',
 ]) . $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('showroom_general', 'Types'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('showroom_general', 'Groups'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('showroom_general', 'Update');
 ?>
-<div class="type-update">
+<div class="group-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

@@ -2,15 +2,13 @@
 
 namespace inblank\showroom\models;
 
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use inblank\showroom\models\Type;
 
 /**
- * TypeSearch represents the model behind the search form about `inblank\showroom\models\Type`.
+ * GroupSearch represents the model behind the search form about `inblank\showroom\models\Group`.
  */
-class TypeSearch extends Type
+class GroupSearch extends Group
 {
     /**
      * @inheritdoc
@@ -41,7 +39,7 @@ class TypeSearch extends Type
      */
     public function search($params)
     {
-        $query = Type::find();
+        $query = Group::find();
 
         // add conditions that should always apply here
 

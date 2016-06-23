@@ -5,8 +5,7 @@ namespace tests\codeception;
 use Codeception\Specify;
 use inblank\showroom\models\Price;
 use inblank\showroom\models\Product;
-use inblank\showroom\models\Type;
-use yii;
+use inblank\showroom\models\Group;
 use yii\codeception\TestCase;
 
 class ProductTest extends TestCase
@@ -31,14 +30,14 @@ class ProductTest extends TestCase
         expect("we can't create product without name", $product5->save())->false();
         expect("we can see error `name`", $product5->getErrors())->hasKey('name');
         $product5->name = 'Test product 5';
-        expect('we can create type with name and empty type', $product5->save())->true();
+        expect('we can create group with name and empty group', $product5->save())->true();
         expect('product create date must be set', $product5->created_at)->notEmpty();
-        $product6 = new Product(['name' => 'Test product 6', 'type_id'=>1]);
-        expect('we can create product with exists type', $product6->save())->true();
-        $product7 = new Product(['name' => 'Test product 5', 'type_id'=>4]);
-        expect("we can't create product with not existing type", $product7->save())->false();
-        expect("we must see error `type_id`", $product7->getErrors())->hasKey('type_id');
-        $product7->type_id=2;
+        $product6 = new Product(['name' => 'Test product 6', 'group_id'=>1]);
+        expect('we can create product with exists group', $product6->save())->true();
+        $product7 = new Product(['name' => 'Test product 5', 'group_id'=>4]);
+        expect("we can't create product with not existing group", $product7->save())->false();
+        expect("we must see error `group_id`", $product7->getErrors())->hasKey('group_id');
+        $product7->group_id=2;
         expect('we can create product with same name', $product7->save())->true();
         expect('and `slug` will be different', $product5->slug)->notEquals($product7->slug);
         $product8 = new Product(['name' => 'Test product 7', 'slug'=>$product6->slug]);
@@ -56,11 +55,11 @@ class ProductTest extends TestCase
         $product->name = 'Changed product';
         expect('we can update product', $product->save())->true();
         expect('... and slug should be not changed', $product->slug)->equals($oldSlug);
-        $product->type_id=2;
-        expect("we can change the product type to an existing", $product->save())->true();
-        $product->type_id=4;
-        expect("we can't change the product type to an not existing", $product->save())->false();
-        expect("we must see error `type_id`", $product->getErrors())->hasKey('type_id');
+        $product->group_id=2;
+        expect("we can change the product group to an existing", $product->save())->true();
+        $product->group_id=4;
+        expect("we can't change the product group to an not existing", $product->save())->false();
+        expect("we must see error `group_id`", $product->getErrors())->hasKey('group_id');
 
         $product2 = Product::findOne(2);
         $product2->slug = $product->slug;
@@ -88,10 +87,10 @@ class ProductTest extends TestCase
     public function testProductRelations()
     {
         $product = Product::findOne(1);
-        $type = Type::findOne($product->type_id);
-        expect('product must have type', $type)->notNull();
-        expect('type must have id=2', $type->id)->equals(2);
-        expect("types can be equals", $product->type->id)->equals($type->id);
+        $group = Group::findOne($product->group_id);
+        expect('product must have group', $group)->notNull();
+        expect('group must have id=2', $group->id)->equals(2);
+        expect("groups can be equals", $product->group->id)->equals($group->id);
     }
 
     protected function tearDown()

@@ -4,15 +4,15 @@ namespace inblank\showroom\controllers\backend;
 
 use inblank\showroom\components\BackendController;
 use Yii;
-use inblank\showroom\models\Type;
-use inblank\showroom\models\TypeSearch;
+use inblank\showroom\models\Group;
+use inblank\showroom\models\GroupSearch;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * TypeController implements the CRUD actions for Type model.
+ * GroupController implements the CRUD actions for Group model.
  */
-class TypeController extends BackendController
+class GroupController extends BackendController
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class TypeController extends BackendController
     }
 
     /**
-     * Lists all Type models.
+     * Lists all Group models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new TypeSearch();
+        $searchModel = new GroupSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class TypeController extends BackendController
     }
 
     /**
-     * Displays a single Type model.
+     * Displays a single Group model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +57,13 @@ class TypeController extends BackendController
     }
 
     /**
-     * Creates a new Type model.
+     * Creates a new Group model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Type();
+        $model = new Group();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +75,7 @@ class TypeController extends BackendController
     }
 
     /**
-     * Updates an existing Type model.
+     * Updates an existing Group model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,7 +94,7 @@ class TypeController extends BackendController
     }
 
     /**
-     * Deletes an existing Type model.
+     * Deletes an existing Group model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +107,15 @@ class TypeController extends BackendController
     }
 
     /**
-     * Finds the Type model based on its primary key value.
+     * Finds the Group model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Type the loaded model
+     * @return Group the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Type::findOne($id)) !== null) {
+        if (($model = Group::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

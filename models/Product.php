@@ -18,18 +18,18 @@ use yii\db\Expression;
  *
  * Table fields:
  * @property integer $id product identifier
+ * @property integer $type type of product. self::GOODS or self::SERVICE
  * @property integer $seller_id product seller identifier.
  *  If defined, mean that the product owned by only this seller
  *  null - means that the product define by site admin and may be exists in any seller.
- * @property integer $type_id product's type identifier
+ * @property integer $group_id product's group identifier
  * @property string $slug product slug for generate URL
  * @property string $name product name
  * @property string $created_at product creation date
- * @property string $deleted_at product delete date
  *
  * Relations
  * @property CategoriesProducts[] $categoriesProducts
- * @property Type $type product type
+ * @property Group $group product type
  */
 class Product extends \yii\db\ActiveRecord
 {
@@ -57,11 +57,11 @@ class Product extends \yii\db\ActiveRecord
     {
         return [
             ['name', 'required'],
-            [['seller_id', 'type_id'], 'integer'],
-            [['created_at', 'deleted_at'], 'date', 'format' => 'php:Y-m-d H:i:s'],
+            [['seller_id', 'group_id'], 'integer'],
+            [['created_at'], 'date', 'format' => 'php:Y-m-d H:i:s'],
             [['slug', 'name'], 'string', 'max' => 255],
             ['slug', 'unique'],
-            ['type_id', 'exist', 'targetClass' => Type::className(), 'targetAttribute' => 'id'],
+            ['group_id', 'exist', 'targetClass' => Group::className(), 'targetAttribute' => 'id'],
         ];
     }
 
@@ -72,12 +72,12 @@ class Product extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('showroom_general', 'ID'),
-            'seller_id' => Yii::t('showroom_general', 'Seller ID'),
-            'type_id' => Yii::t('showroom_general', 'Type ID'),
+            'type' => Yii::t('showroom_general', 'Type'),
+            'seller_id' => Yii::t('showroom_general', 'Seller'),
+            'group_id' => Yii::t('showroom_general', 'Group'),
             'slug' => Yii::t('showroom_general', 'Slug'),
             'name' => Yii::t('showroom_general', 'Name'),
             'created_at' => Yii::t('showroom_general', 'Created At'),
-            'deleted_at' => Yii::t('showroom_general', 'Deleted At'),
         ];
     }
 
@@ -100,9 +100,9 @@ class Product extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getType()
+    public function getGroup()
     {
-        return $this->hasOne(Type::className(), ['id' => 'type_id']);
+        return $this->hasOne(Group::className(), ['id' => 'group_id']);
     }
 
     /**

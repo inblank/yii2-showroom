@@ -10,7 +10,7 @@ class m160516_125142_showroom_init extends Migration
     const TAB_SELLERS_ADDRESSES = 'sellers_addresses';
     const TAB_CATEGORIES = 'categories';
     const TAB_TREE = 'categories_tree';
-    const TAB_TYPES = 'types';
+    const TAB_GROUPS = 'groups';
     const TAB_PRODUCTS = 'products';
     const TAB_LINKS = 'categories_products';
     const TAB_VENDORS = 'vendors';
@@ -67,8 +67,8 @@ class m160516_125142_showroom_init extends Migration
             'CASCADE', 'RESTRICT'
         );
 
-        // Products types
-        $tab = $this->tn(self::TAB_TYPES);
+        // Products groups
+        $tab = $this->tn(self::TAB_GROUPS);
         $this->createTable($tab, [
             'id' => Schema::TYPE_PK,
             'slug' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
@@ -80,16 +80,16 @@ class m160516_125142_showroom_init extends Migration
         $tab = $this->tn(self::TAB_PRODUCTS);
         $this->createTable($tab, [
             'id' => Schema::TYPE_PK,
-            'kind' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
+            'type' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
             'seller_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
-            'type_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
+            'group_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
             'slug' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'name' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'created_at' => Schema::TYPE_DATETIME . ' DEFAULT NULL',
         ], $this->tableOptions);
         $this->createIndex('unique_slug', $tab, 'slug', true);
         $this->createIndex('seller', $tab, 'seller_id');
-        $this->createIndex('type', $tab, 'type_id');
+        $this->createIndex('group', $tab, 'group_id');
         $this->addForeignKey(
             $this->fk(self::TAB_PRODUCTS, self::TAB_SELLERS),
             $tab, 'seller_id',
@@ -97,9 +97,9 @@ class m160516_125142_showroom_init extends Migration
             'CASCADE', 'RESTRICT'
         );
         $this->addForeignKey(
-            $this->fk(self::TAB_PRODUCTS, self::TAB_TYPES),
-            $tab, 'type_id',
-            $this->tn(self::TAB_TYPES), 'id',
+            $this->fk(self::TAB_PRODUCTS, self::TAB_GROUPS),
+            $tab, 'group_id',
+            $this->tn(self::TAB_GROUPS), 'id',
             'RESTRICT', 'RESTRICT'
         );
 
@@ -185,7 +185,7 @@ class m160516_125142_showroom_init extends Migration
             self::TAB_VENDORS,
             self::TAB_LINKS,
             self::TAB_PRODUCTS,
-            self::TAB_TYPES,
+            self::TAB_GROUPS,
             self::TAB_TREE,
             self::TAB_CATEGORIES,
             self::TAB_SELLERS_ADDRESSES,

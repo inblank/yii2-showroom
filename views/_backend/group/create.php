@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model inblank\showroom\models\Type */
+/* @var $model inblank\showroom\models\Group */
 
-$this->title = Yii::t('showroom_general', 'Create Type');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('showroom_general', 'Types'), 'url' => ['index']];
+$this->title = Yii::t('showroom_general', 'Create Group');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('showroom_general', 'Groups'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="type-create">
+<div class="group-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

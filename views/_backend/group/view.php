@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model inblank\showroom\models\Type */
+/* @var $model inblank\showroom\models\Group */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('showroom_general', 'Types'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('showroom_general', 'Groups'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="type-view">
+<div class="group-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
