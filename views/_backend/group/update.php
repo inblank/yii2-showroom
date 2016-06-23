@@ -5,12 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model inblank\showroom\models\Group */
 
-$this->title = Yii::t('showroom_general', 'Update {modelClass}: ', [
-    'modelClass' => 'Group',
-]) . $model->name;
+$this->title = Yii::t('showroom_backend', 'Update Group') . ': ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('showroom_general', 'Groups'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('showroom_general', 'Update');
+$this->params['breadcrumbs'][] = Yii::t('showroom_backend', 'Update');
 ?>
 <div class="group-update">
 
