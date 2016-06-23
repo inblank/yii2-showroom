@@ -36,7 +36,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'name',
-            'slug',
+            //'slug',
+            'profile.web',
             'created_at',
 
             ['class' => 'yii\grid\ActionColumn'],

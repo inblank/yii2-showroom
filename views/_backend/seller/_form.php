@@ -35,8 +35,17 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model->profile, 'web')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model->profile, 'description')->widget(\dosamigos\ckeditor\CKEditor::className(), [
+        'options' => [
+            'rows' => 6,
+            'class' => 'form-control',
+        ],
+        'preset' => 'basic',
+    ]) ?>
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('showroom_backend', 'Create') : Yii::t('showroom_frontend', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('showroom_backend', 'Create') : Yii::t('showroom_backend', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

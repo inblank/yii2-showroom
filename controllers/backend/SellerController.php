@@ -3,12 +3,12 @@
 namespace inblank\showroom\controllers\backend;
 
 use inblank\showroom\components\BackendController;
-use Yii;
 use inblank\showroom\models\Seller;
 use inblank\showroom\models\SellerSearch;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * SellerController implements the CRUD actions for Seller model.
@@ -67,7 +67,8 @@ class SellerController extends BackendController
         /** @var Seller $model */
         $model = Yii::createObject($this->di('Seller'));
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $post = Yii::$app->request->post();
+        if ($model->load($post) && $model->save() && $model->profile->load($post) && $model->profile->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
         $usersList = ArrayHelper::map(
@@ -91,7 +92,8 @@ class SellerController extends BackendController
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $post = Yii::$app->request->post();
+        if ($model->load($post) && $model->save() && $model->profile->load($post) && $model->profile->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
         $usersList = ArrayHelper::map(

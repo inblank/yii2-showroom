@@ -39,6 +39,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'name',
             'slug',
+            'profile.web',
+            'profile.description:html',
             'created_at',
         ],
     ]) ?>
