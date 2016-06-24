@@ -8,6 +8,7 @@
  */
 namespace inblank\showroom\models;
 
+use inblank\showroom\traits\CommonTrait;
 use Yii;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -18,13 +19,14 @@ use yii\db\Expression;
  *
  * Table fields:
  * @property integer $id product identifier
- * @property integer $type type of product. self::GOODS or self::SERVICE
+ * @property integer $type type of product. self::TYPE_GOODS or self::TYPE_SERVICE
  * @property integer $seller_id product seller identifier.
  *  If defined, mean that the product owned by only this seller
  *  null - means that the product define by site admin and may be exists in any seller.
  * @property integer $group_id product's group identifier
  * @property string $slug product slug for generate URL
  * @property string $name product name
+ * @property string $shortname product shortname
  * @property string $created_at product creation date
  *
  * Relations
@@ -33,6 +35,13 @@ use yii\db\Expression;
  */
 class Product extends \yii\db\ActiveRecord
 {
+    use CommonTrait;
+
+    /** Product is goods */
+    const TYPE_GOODS = 1;
+    /** Product is service */
+    const TYPE_SERVICE = 2;
+
     /**
      * @inheritdoc
      */
@@ -59,9 +68,13 @@ class Product extends \yii\db\ActiveRecord
             ['name', 'required'],
             [['seller_id', 'group_id'], 'integer'],
             [['created_at'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['slug', 'name'], 'string', 'max' => 255],
+            [['slug', 'name', 'shortname'], 'string', 'max' => 255],
             ['slug', 'unique'],
             ['group_id', 'exist', 'targetClass' => Group::className(), 'targetAttribute' => 'id'],
+            ['type', 'in', 'range' => [self::TYPE_GOODS, self::TYPE_SERVICE]],
+            ['shortname', 'default', 'value' => function(){
+                return $this->name;
+            }]
         ];
     }
 
@@ -71,13 +84,20 @@ class Product extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            // table's attributes
             'id' => Yii::t('showroom_general', 'ID'),
             'type' => Yii::t('showroom_general', 'Type'),
             'seller_id' => Yii::t('showroom_general', 'Seller'),
             'group_id' => Yii::t('showroom_general', 'Group'),
             'slug' => Yii::t('showroom_general', 'Slug'),
             'name' => Yii::t('showroom_general', 'Name'),
-            'created_at' => Yii::t('showroom_general', 'Created At'),
+            'shortname' => Yii::t('showroom_general', 'Short Name'),
+            'created_at' => Yii::t('showroom_general', 'Created'),
+
+            // other attributes
+            'seller' => Yii::t('showroom_general', 'Seller'),
+            'group' => Yii::t('showroom_general', 'Group'),
+            'typeText' => Yii::t('showroom_general', 'Type'),
         ];
     }
 
@@ -86,7 +106,15 @@ class Product extends \yii\db\ActiveRecord
      */
     public function getCategories()
     {
-        return $this->hasMany(Category::className(), ['id' => 'category_id'])->via('categoriesProducts');
+        return $this->hasMany(self::di('Category'), ['id' => 'category_id'])->via('categoriesProducts');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSeller()
+    {
+        return $this->hasOne(self::di('Seller'), ['id' => 'category_id'])->via('categoriesProducts');
     }
 
     /**
@@ -94,7 +122,7 @@ class Product extends \yii\db\ActiveRecord
      */
     public function getCategoriesProducts()
     {
-        return $this->hasMany(CategoriesProducts::className(), ['product_id' => 'id']);
+        return $this->hasMany(self::di('CategoriesProducts'), ['product_id' => 'id']);
     }
 
     /**
@@ -102,7 +130,7 @@ class Product extends \yii\db\ActiveRecord
      */
     public function getGroup()
     {
-        return $this->hasOne(Group::className(), ['id' => 'group_id']);
+        return $this->hasOne(self::di('Group'), ['id' => 'group_id']);
     }
 
     /**
@@ -110,7 +138,21 @@ class Product extends \yii\db\ActiveRecord
      */
     public function getPrices()
     {
-        return $this->hasMany(Price::className(), ['product_id' => 'id']);
+        return $this->hasMany(self::di('Price'), ['product_id' => 'id']);
+    }
+
+    /**
+     * Get product readable type
+     */
+    public function getTypeText(){
+        switch($this->type){
+            case self::TYPE_GOODS:
+                return Yii::t('showroom_general', 'Goods');
+            case self::TYPE_SERVICE:
+                return Yii::t('showroom_general', 'Service');
+            default:
+                return null;
+        }
     }
 
     /** @inheritdoc */

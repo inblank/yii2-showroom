@@ -85,6 +85,7 @@ class m160516_125142_showroom_init extends Migration
             'group_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
             'slug' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'name' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
+            'shortname' => Schema::TYPE_STRING . "(255) NOT NULL DEFAULT ''",
             'created_at' => Schema::TYPE_DATETIME . ' DEFAULT NULL',
         ], $this->tableOptions);
         $this->createIndex('unique_slug', $tab, 'slug', true);
